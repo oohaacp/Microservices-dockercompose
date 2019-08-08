@@ -1,0 +1,64 @@
+version: "2"
+services:
+
+  zuul-gateway:
+    image: zuulgateway12345
+    build: zuul-gateway/
+    #restart: always
+    network_mode: host
+    depends_on:
+    - eureka-server
+    - config-services
+    ports:
+    - 8092:8092
+    expose:
+    - 8092
+
+  eureka-server:
+    image: eurekaserver12345:latest
+    build: eureka-server/
+    #restart: always
+    network_mode: host
+    ports:
+    - 9090:9090
+    expose:
+    - 9090
+
+
+  config-services:
+      image: configservices12345:latest
+      build: config-services/
+      #restart: always
+      network_mode: host
+      ports:
+        - 8888:8888
+      expose:
+        - 8888
+  mongo:
+    image: mongo:latest
+    #restart: always
+    network_mode: host
+    ports:
+      - 27017:27017
+    expose:
+      - 27017
+  springboot-mongodb:
+    image: springbootmongodbimg:latest
+    build: springboot-mongodb/
+    #restart: always
+    network_mode: host
+    depends_on:
+    - mongo
+    - config-services
+    - eureka-server
+    - zuul-gateway
+    ports:
+    - 8080:8080
+    expose:
+    - 8080
+
+
+
+
+
+
